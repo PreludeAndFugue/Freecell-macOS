@@ -11,6 +11,8 @@ import GameplayKit
 
 class GameScene: SKScene {
 
+    // MARK: - Properties
+
     private let topLeft = CGPoint(x: 0, y: 1)
     private let cardSize = CGSize(width: 103, height: 150)
     private let spacing: CGFloat = 20
@@ -31,6 +33,8 @@ class GameScene: SKScene {
     private var currentPlayingCard: CurrentPlayingCard?
 
 
+    // MARK: - Lifecycle
+
     override func sceneDidLoad() {
         super.sceneDidLoad()
         anchorPoint = CGPoint(x: 0, y: 1)
@@ -42,90 +46,6 @@ class GameScene: SKScene {
         // https://stackoverflow.com/questions/39590602/scenedidload-being-called-twice
         setupGameParts()
         setupCards()
-    }
-    
-    
-    func touchDown(atPoint point: CGPoint) {
-        guard
-            let playingCard = cardFrom(position: point),
-            let parent = playingCard.parent,
-            let location = game.location(from: playingCard.card),
-            game.canMove(card: playingCard.card)
-        else {
-            return
-        }
-        let touchPoint = playingCard.convert(point, from: parent)
-        playingCard.zPosition = zIndex
-        currentPlayingCard = CurrentPlayingCard(playingCard: playingCard, startPosition: playingCard.position, touchPoint: touchPoint, location: location)
-
-        zIndex += zIndexIncrement
-    }
-
-
-    func doubleClick(at point: CGPoint) {
-        guard
-            let playingCard = cardFrom(position: point),
-            let location = game.location(from: playingCard.card),
-            game.canMove(card: playingCard.card)
-        else {
-            return
-        }
-
-        let currentPlayingCard = CurrentPlayingCard(playingCard: playingCard, startPosition: point, touchPoint: point, location: location)
-
-        switch location {
-        case .foundation: break
-        case .cell:
-            do {
-                let newLocation = try game.moveToFoundation(from: location)
-                moveToNewLocation(currentPlayingCard: currentPlayingCard, location: newLocation)
-            } catch {}
-        case .cascade:
-            do {
-                let newFoundation = try game.moveToFoundation(from: location)
-                moveToNewLocation(currentPlayingCard: currentPlayingCard, location: newFoundation)
-                return
-            } catch {}
-            do {
-                let newCell = try game.moveToCell(from: location)
-                moveToNewLocation(currentPlayingCard: currentPlayingCard, location: newCell)
-                return
-            } catch {}
-        }
-    }
-
-
-    func touchMoved(toPoint pos: CGPoint) {
-        guard let currentPlayingCard = currentPlayingCard else { return }
-        currentPlayingCard.playingCard.position = CGPoint(x: pos.x - currentPlayingCard.touchPoint.x, y: pos.y - currentPlayingCard.touchPoint.y)
-    }
-
-
-    func touchUp(atPoint pos: CGPoint) {
-        guard let currentPlayingCard = currentPlayingCard else { return }
-        if let dropLocation = dropLocation(from: pos) {
-            do {
-                let startLocation = currentPlayingCard.location
-                try game.move(from: startLocation, to: dropLocation)
-                moveToNewLocation(currentPlayingCard: currentPlayingCard, location: dropLocation)
-            } catch GameError.invalidMove {
-                returnToOriginalLocation(currentPlayingCard: currentPlayingCard)
-            } catch {
-                // Something went wrong - don't know what
-                returnToOriginalLocation(currentPlayingCard: currentPlayingCard)
-            }
-        } else {
-            returnToOriginalLocation(currentPlayingCard: currentPlayingCard)
-        }
-        self.currentPlayingCard = nil
-
-        print(game)
-
-
-        // check if game is over
-        if game.isGameOver {
-            print("game over")
-        }
     }
 
 
@@ -232,6 +152,92 @@ class GameScene: SKScene {
         currentPlayingCard.playingCard.run(action)
     }
 
+
+    // MARK: - Touch handlers
+
+    private func touchDown(atPoint point: CGPoint) {
+        guard
+            let playingCard = cardFrom(position: point),
+            let parent = playingCard.parent,
+            let location = game.location(from: playingCard.card),
+            game.canMove(card: playingCard.card)
+            else {
+                return
+        }
+        let touchPoint = playingCard.convert(point, from: parent)
+        playingCard.zPosition = zIndex
+        currentPlayingCard = CurrentPlayingCard(playingCard: playingCard, startPosition: playingCard.position, touchPoint: touchPoint, location: location)
+
+        zIndex += zIndexIncrement
+    }
+
+
+    private func doubleClick(at point: CGPoint) {
+        guard
+            let playingCard = cardFrom(position: point),
+            let location = game.location(from: playingCard.card),
+            game.canMove(card: playingCard.card)
+            else {
+                return
+        }
+
+        let currentPlayingCard = CurrentPlayingCard(playingCard: playingCard, startPosition: point, touchPoint: point, location: location)
+
+        switch location {
+        case .foundation: break
+        case .cell:
+            do {
+                let newLocation = try game.moveToFoundation(from: location)
+                moveToNewLocation(currentPlayingCard: currentPlayingCard, location: newLocation)
+            } catch {}
+        case .cascade:
+            do {
+                let newFoundation = try game.moveToFoundation(from: location)
+                moveToNewLocation(currentPlayingCard: currentPlayingCard, location: newFoundation)
+                return
+            } catch {}
+            do {
+                let newCell = try game.moveToCell(from: location)
+                moveToNewLocation(currentPlayingCard: currentPlayingCard, location: newCell)
+                return
+            } catch {}
+        }
+    }
+
+
+    private func touchMoved(toPoint pos: CGPoint) {
+        guard let currentPlayingCard = currentPlayingCard else { return }
+        currentPlayingCard.playingCard.position = CGPoint(x: pos.x - currentPlayingCard.touchPoint.x, y: pos.y - currentPlayingCard.touchPoint.y)
+    }
+
+
+    private func touchUp(atPoint pos: CGPoint) {
+        guard let currentPlayingCard = currentPlayingCard else { return }
+        if let dropLocation = dropLocation(from: pos) {
+            do {
+                let startLocation = currentPlayingCard.location
+                try game.move(from: startLocation, to: dropLocation)
+                moveToNewLocation(currentPlayingCard: currentPlayingCard, location: dropLocation)
+            } catch GameError.invalidMove {
+                returnToOriginalLocation(currentPlayingCard: currentPlayingCard)
+            } catch {
+                // Something went wrong - don't know what
+                returnToOriginalLocation(currentPlayingCard: currentPlayingCard)
+            }
+        } else {
+            returnToOriginalLocation(currentPlayingCard: currentPlayingCard)
+        }
+        self.currentPlayingCard = nil
+
+
+        // check if game is over
+        if game.isGameOver {
+            print("game over")
+        }
+    }
+
+
+    // MARK: - game setup
 
     private func setupGameParts() {
         let backgroundColour = NSColor.init(white: 1.0, alpha: 0.2)
