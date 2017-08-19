@@ -62,6 +62,39 @@ class GameScene: SKScene {
     }
 
 
+    func doubleClick(at point: CGPoint) {
+        guard
+            let playingCard = cardFrom(position: point),
+            let location = game.location(from: playingCard.card),
+            game.canMove(card: playingCard.card)
+        else {
+            return
+        }
+
+        let currentPlayingCard = CurrentPlayingCard(playingCard: playingCard, startPosition: point, touchPoint: point, location: location)
+
+        switch location {
+        case .foundation: break
+        case .cell:
+            do {
+                let newLocation = try game.moveToFoundation(from: location)
+                moveToNewLocation(currentPlayingCard: currentPlayingCard, location: newLocation)
+            } catch {}
+        case .cascade:
+            do {
+                let newFoundation = try game.moveToFoundation(from: location)
+                moveToNewLocation(currentPlayingCard: currentPlayingCard, location: newFoundation)
+                return
+            } catch {}
+            do {
+                let newCell = try game.moveToCell(from: location)
+                moveToNewLocation(currentPlayingCard: currentPlayingCard, location: newCell)
+                return
+            } catch {}
+        }
+    }
+
+
     func touchMoved(toPoint pos: CGPoint) {
         guard let currentPlayingCard = currentPlayingCard else { return }
         currentPlayingCard.playingCard.position = CGPoint(x: pos.x - currentPlayingCard.touchPoint.x, y: pos.y - currentPlayingCard.touchPoint.y)
@@ -97,7 +130,11 @@ class GameScene: SKScene {
 
 
     override func mouseDown(with event: NSEvent) {
-        touchDown(atPoint: event.location(in: self))
+        if (event.clickCount == 2) {
+            doubleClick(at: event.location(in: self))
+        } else {
+            touchDown(atPoint: event.location(in: self))
+        }
     }
 
 

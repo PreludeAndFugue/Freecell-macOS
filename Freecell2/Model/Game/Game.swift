@@ -71,6 +71,48 @@ struct Game {
     }
 
 
+    func moveToFoundation(from location: Location) throws -> Location {
+        guard let card = card(at: location) else {
+            throw GameError.invalidMove
+        }
+        for (i, foundation) in foundations.enumerated() {
+            switch foundation.state {
+            case .empty:
+                if card.value == .ace {
+                    let newLocation = Location.foundation(i)
+                    try move(from: location, to: newLocation)
+                    return newLocation
+                }
+            case .card(let foundationCard):
+                if card.suit == foundationCard.suit && card.value.rawValue == foundationCard.value.rawValue + 1 {
+                    let newLocation = Location.foundation(i)
+                    try move(from: location, to: newLocation)
+                    return newLocation
+                }
+            }
+        }
+        throw GameError.invalidMove
+    }
+
+
+    func moveToCell(from location: Location) throws -> Location {
+        guard let _ = card(at: location) else {
+            throw GameError.invalidMove
+        }
+        for (i, cell) in cells.enumerated() {
+            switch cell.state {
+            case .card:
+                continue
+            case .empty:
+                let newLocation = Location.cell(i)
+                try move(from: location, to: newLocation)
+                return newLocation
+            }
+        }
+        throw GameError.invalidMove
+    }
+
+
     func location(from card: Card) -> Location? {
         for (i, cell) in cells.enumerated() {
             if cell.contains(card: card) {

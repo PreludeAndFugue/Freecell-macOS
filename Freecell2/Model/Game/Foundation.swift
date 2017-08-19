@@ -10,6 +10,13 @@ final class Foundation: CanAddCard {
 
     var state: State = .empty
 
+    var isEmpty: Bool {
+        switch state {
+        case .empty: return true
+        default: return false
+        }
+    }
+
 
     func contains(card: Card) -> Bool {
         switch state {
