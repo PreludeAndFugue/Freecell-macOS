@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E350B9E1F489BFF0009FD4B /* README in Resources */ = {isa = PBXBuildFile; fileRef = 4E350B9D1F489BFF0009FD4B /* README */; };
 		4E396E811EF3DF8600F8696A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E396E801EF3DF8600F8696A /* AppDelegate.swift */; };
 		4E396E871EF3DF8600F8696A /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E396E861EF3DF8600F8696A /* GameScene.swift */; };
 		4E396E891EF3DF8600F8696A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E396E881EF3DF8600F8696A /* ViewController.swift */; };
@@ -98,6 +99,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4E350B9D1F489BFF0009FD4B /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		4E396E7D1EF3DF8600F8696A /* Freecell2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Freecell2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E396E801EF3DF8600F8696A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4E396E861EF3DF8600F8696A /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 		4E396E741EF3DF8600F8696A = {
 			isa = PBXGroup;
 			children = (
+				4E350B9D1F489BFF0009FD4B /* README */,
 				4E396E7F1EF3DF8600F8696A /* Freecell2 */,
 				4E396E971EF3DF8600F8696A /* Freecell2Tests */,
 				4E396E7E1EF3DF8600F8696A /* Products */,
@@ -497,6 +500,7 @@
 				4E71F22D1F439404002E66D3 /* 5_of_spades.png in Resources */,
 				4E71F23C1F439404002E66D3 /* 9_of_hearts.png in Resources */,
 				4E396E8B1EF3DF8600F8696A /* Assets.xcassets in Resources */,
+				4E350B9E1F489BFF0009FD4B /* README in Resources */,
 				4E71F2271F439404002E66D3 /* 4_of_diamonds.png in Resources */,
 				4E71F2431F439404002E66D3 /* ace_of_diamonds.png in Resources */,
 				4E396EAE1EF3E32200F8696A /* 2_of_hearts.png in Resources */,
