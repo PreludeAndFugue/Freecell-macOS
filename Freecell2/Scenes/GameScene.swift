@@ -29,6 +29,7 @@ class GameScene: SKScene {
     private var foundations: [SKSpriteNode] = []
     private var cascades: [SKSpriteNode] = []
     private var cardNodes: [PlayingCard] = []
+    private var newGameButton: SKSpriteNode!
 
     private var currentPlayingCard: CurrentPlayingCard?
 
@@ -40,7 +41,7 @@ class GameScene: SKScene {
         anchorPoint = CGPoint(x: 0, y: 1)
     }
 
-    
+
     override func didMove(to view: SKView) {
         super.didMove(to: view)
         // https://stackoverflow.com/questions/39590602/scenedidload-being-called-twice
@@ -74,6 +75,10 @@ class GameScene: SKScene {
 
 
     // MARK: - Private
+
+    private func isGameOver() {
+        
+    }
 
     private func cardFrom(position: CGPoint) -> PlayingCard? {
         var candidateCards: [PlayingCard] = []
@@ -156,13 +161,18 @@ class GameScene: SKScene {
     // MARK: - Touch handlers
 
     private func touchDown(atPoint point: CGPoint) {
+        if newGameButton.contains(point) {
+            print("new game")
+            newGame()
+            return
+        }
         guard
             let playingCard = cardFrom(position: point),
             let parent = playingCard.parent,
             let location = game.location(from: playingCard.card),
             game.canMove(card: playingCard.card)
-            else {
-                return
+        else {
+            return
         }
         let touchPoint = playingCard.convert(point, from: parent)
         playingCard.zPosition = zIndex
@@ -177,8 +187,8 @@ class GameScene: SKScene {
             let playingCard = cardFrom(position: point),
             let location = game.location(from: playingCard.card),
             game.canMove(card: playingCard.card)
-            else {
-                return
+        else {
+            return
         }
 
         let currentPlayingCard = CurrentPlayingCard(playingCard: playingCard, startPosition: point, touchPoint: point, location: location)
@@ -237,6 +247,15 @@ class GameScene: SKScene {
     }
 
 
+    private func newGame() {
+        for card in cardNodes {
+            card.removeFromParent()
+        }
+        cardNodes = []
+        game.new()
+        setupCards()
+    }
+
     // MARK: - game setup
 
     private func setupGameParts() {
@@ -275,6 +294,13 @@ class GameScene: SKScene {
             cascades.append(cascade)
             addChild(cascade)
         }
+
+        // New game button
+        newGameButton = SKSpriteNode(color: .red, size: CGSize(width: 50, height: 50))
+        newGameButton.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        newGameButton.position = CGPoint(x: self.size.width / 2, y: -110)
+        newGameButton.zPosition = baseZPosition
+        addChild(newGameButton)
     }
 
 

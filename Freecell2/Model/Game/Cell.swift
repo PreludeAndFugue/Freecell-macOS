@@ -6,17 +6,9 @@
 //  Copyright © 2017 Gary Kerr. All rights reserved.
 //
 
-final class Cell: CanAddCard {
+final class Cell: CanAddCard, ContainsCard, HasState, Resetable {
 
     var state: State = .empty
-
-
-    func contains(card: Card) -> Bool {
-        switch state {
-        case .empty: return false
-        case .card(let currentCard): return card == currentCard
-        }
-    }
 
     
     func canAdd(card: Card) -> Bool {
@@ -43,8 +35,8 @@ final class Cell: CanAddCard {
     }
 
 
-    func reset() {
-        state = .empty
+    func unused() {
+        
     }
 }
 

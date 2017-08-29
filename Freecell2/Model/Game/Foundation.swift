@@ -6,7 +6,7 @@
 //  Copyright © 2017 Gary Kerr. All rights reserved.
 //
 
-final class Foundation: CanAddCard {
+final class Foundation: CanAddCard, ContainsCard, HasState, Resetable {
 
     var state: State = .empty
 
@@ -17,13 +17,6 @@ final class Foundation: CanAddCard {
         }
     }
 
-
-    func contains(card: Card) -> Bool {
-        switch state {
-        case .empty: return false
-        case .card(let currentCard): return card == currentCard
-        }
-    }
 
     func canAdd(card: Card) -> Bool {
         switch state {
@@ -51,11 +44,6 @@ final class Foundation: CanAddCard {
         case .empty:
             return false
         }
-    }
-
-
-    func reset() {
-        state = .empty
     }
 }
 

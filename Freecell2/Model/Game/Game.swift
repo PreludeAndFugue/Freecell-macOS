@@ -10,8 +10,8 @@ struct Game {
 
     // MARK: - Properties
 
-    fileprivate let cells: [Cell]
-    fileprivate let foundations: [Foundation]
+    private let cells: [Cell]
+    private let foundations: [Foundation]
     let cascades: [Cascade]
 
     private let cascadeConfig: [(Int, Int)] = [(0, 6), (7, 13), (14, 20), (21, 27), (28, 33), (34, 39), (40, 45), (46, 51)]
@@ -27,14 +27,23 @@ struct Game {
     // MARK: - Initialisers
 
     init() {
-        let cards = Card.deck().shuffled()
         cells = [Cell(), Cell(), Cell(), Cell()]
         foundations = [Foundation(), Foundation(), Foundation(), Foundation()]
-        cascades = cascadeConfig.map({ cards[$0.0 ... $0.1] }).map({ Array($0) }).map({ Cascade(cards: $0) })
+        cascades = (0 ... 7).map({ _ in Cascade() })
+        self.new()
     }
 
 
     // MARK: - Methods
+
+    func new() {
+        let cards = Card.deck().shuffled()
+        cells.forEach({ $0.reset() })
+        foundations.forEach({ $0.reset() })
+        for (cascade, config) in zip(cascades, cascadeConfig) {
+            cascade.cards = Array(cards[config.0 ... config.1])
+        }
+    }
 
     func canMove(card: Card) -> Bool {
         guard let location = location(from: card) else {

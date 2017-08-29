@@ -6,9 +6,14 @@
 //  Copyright © 2017 Gary Kerr. All rights reserved.
 //
 
-final class Cascade: CanAddCard {
+final class Cascade: CanAddCard, ContainsCard {
     var cards: [Card]
 
+    init() {
+        self.cards = []
+    }
+
+    
     init(cards: [Card]) {
         self.cards = cards
     }
@@ -67,6 +72,11 @@ final class Cascade: CanAddCard {
         } else {
             throw GameError.invalidMove
         }
+    }
+
+
+    func reset(with cards: [Card]) {
+        self.cards = cards
     }
 }
 

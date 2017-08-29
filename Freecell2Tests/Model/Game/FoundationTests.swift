@@ -12,8 +12,9 @@ import XCTest
 class FoundationTests: XCTestCase {
 
     func testExample() {
-        let state = Foundation.State.card(Card(suit: .spades, value: .three))
-        let foundation = Foundation(state: state)
+        let state = State.card(Card(suit: .spades, value: .three))
+        let foundation = Foundation()
+        foundation.state = state
         XCTAssertTrue(foundation.canAdd(card: Card(suit: .spades, value: .four)))
         XCTAssertFalse(foundation.canAdd(card: Card(suit: .spades, value: .three)))
         XCTAssertFalse(foundation.canAdd(card: Card(suit: .spades, value: .two)))
