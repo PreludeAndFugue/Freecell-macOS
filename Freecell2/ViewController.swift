@@ -19,10 +19,12 @@ class ViewController: NSViewController {
 
         if let view = self.skView {
             // Load the SKScene from 'GameScene.sks'
-            if let scene = SKScene(fileNamed: "GameScene") {
+            if let scene = SKScene(fileNamed: "GameScene") as? GameScene {
                 // Set the scale mode to scale to fit the window
                 scene.scaleMode = .aspectFill
-                
+
+                scene.viewDelegate = self
+
                 // Present the scene
                 view.presentScene(scene)
             }
@@ -35,3 +37,28 @@ class ViewController: NSViewController {
     }
 }
 
+
+extension ViewController: GameSceneDelegate {
+    func newGame() -> Bool {
+        let alert = createAlert()
+        switch alert.runModal() {
+        case .alertFirstButtonReturn:
+            return true
+        case .alertSecondButtonReturn:
+            return false
+        default:
+            return false
+        }
+    }
+
+
+    private func createAlert() -> NSAlert {
+        let alert = NSAlert()
+        alert.alertStyle = .informational
+        alert.messageText = "New Game?"
+        alert.informativeText = "Do you want to start a new game?"
+        alert.addButton(withTitle: "Yes")
+        alert.addButton(withTitle: "No")
+        return alert
+    }
+}

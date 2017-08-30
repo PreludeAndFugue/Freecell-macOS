@@ -9,6 +9,10 @@
 import SpriteKit
 import GameplayKit
 
+protocol GameSceneDelegate {
+    func newGame() -> Bool
+}
+
 class GameScene: SKScene {
 
     // MARK: - Properties
@@ -32,6 +36,8 @@ class GameScene: SKScene {
     private var newGameButton: SKSpriteNode!
 
     private var currentPlayingCard: CurrentPlayingCard?
+
+    var viewDelegate: GameSceneDelegate?
 
 
     // MARK: - Lifecycle
@@ -75,10 +81,6 @@ class GameScene: SKScene {
 
 
     // MARK: - Private
-
-    private func isGameOver() {
-        
-    }
 
     private func cardFrom(position: CGPoint) -> PlayingCard? {
         var candidateCards: [PlayingCard] = []
@@ -162,7 +164,6 @@ class GameScene: SKScene {
 
     private func touchDown(atPoint point: CGPoint) {
         if newGameButton.contains(point) {
-            print("new game")
             newGame()
             return
         }
@@ -248,6 +249,8 @@ class GameScene: SKScene {
 
 
     private func newGame() {
+        guard let viewDelegate = viewDelegate, viewDelegate.newGame() else { return }
+
         for card in cardNodes {
             card.removeFromParent()
         }
