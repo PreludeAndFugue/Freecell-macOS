@@ -63,6 +63,16 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="View" id="KY6-Tq-N9v" userLabel="View">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="View" id="Dfr-MF-KDM">
+                                    <items>
+                                        <menuItem title="Statistics" id="WYV-ek-JLc" userLabel="Statistics">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Edit" id="5QF-Oa-p0T">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Edit" id="W48-6f-4Dl">
