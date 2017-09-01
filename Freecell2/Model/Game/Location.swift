@@ -11,3 +11,17 @@ enum Location {
     case foundation(Int)
     case cascade(Int)
 }
+
+
+extension Location: CustomDebugStringConvertible {
+    var debugDescription: String {
+        switch self {
+        case .cell(let value):
+            return "cell(\(value))"
+        case .foundation(let value):
+            return "foundation(\(value))"
+        case .cascade(let value):
+            return "cascade(\(value))"
+        }
+    }
+}

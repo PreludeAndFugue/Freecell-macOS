@@ -6,7 +6,7 @@
 //  Copyright © 2017 Gary Kerr. All rights reserved.
 //
 
-struct Game {
+class Game {
 
     // MARK: - Properties
 
@@ -14,6 +14,7 @@ struct Game {
     private let foundations: [Foundation]
     let cascades: [Cascade]
 
+    private var moves = MoveHistory()
     private let cascadeConfig: [(Int, Int)] = [(0, 6), (7, 13), (14, 20), (21, 27), (28, 33), (34, 39), (40, 45), (46, 51)]
 
 
@@ -43,8 +44,10 @@ struct Game {
         for (cascade, config) in zip(cascades, cascadeConfig) {
             cascade.cards = Array(cards[config.0 ... config.1])
         }
+        moves.clear()
     }
 
+    
     func canMove(card: Card) -> Bool {
         guard let location = location(from: card) else {
             return false
@@ -66,6 +69,10 @@ struct Game {
             throw GameError.invalidMove
         }
         try move(card: card, to: toLocation)
+
+        moves.add(move: Move(fromLocation: fromLocation, toLocation: toLocation))
+        print(moves)
+
         switch fromLocation {
         case .cascade(let value):
             let cascade = cascades[value]
@@ -76,6 +83,28 @@ struct Game {
         case .foundation:
             // can't remove card from here
             break
+        }
+    }
+
+
+    func quickMove(from location: Location) throws -> Location {
+        switch location {
+        case .foundation:
+            throw GameError.invalidMove
+        case .cell:
+            do {
+                let newLocation = try moveToFoundation(from: location)
+                return newLocation
+            }
+        case .cascade:
+            do {
+                let newLocation = try moveToFoundation(from: location)
+                return newLocation
+            } catch {}
+            do {
+                let newLocation = try moveToCell(from: location)
+                return newLocation
+            }
         }
     }
 
