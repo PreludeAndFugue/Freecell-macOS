@@ -97,7 +97,7 @@ class GameScene: SKScene {
 
     private func touchMoved(toPoint pos: CGPoint) {
         guard let currentPlayingCard = currentPlayingCard else { return }
-        currentPlayingCard.move(to: pos)
+        currentPlayingCard.update(position: pos)
     }
 
 

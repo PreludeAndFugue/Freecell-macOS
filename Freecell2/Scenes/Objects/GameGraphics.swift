@@ -144,8 +144,7 @@ struct GameGraphics {
             let cascadePosition = cascade.position
             newPosition = CGPoint(x: cascadePosition.x, y: cascadePosition.y + CGFloat(cardCount) * config.margin)
         }
-        let action = SKAction.move(to: newPosition, duration: 0.2)
-        currentPlayingCard.playingCard.run(action)
+        currentPlayingCard.move(to: newPosition)
     }
 
 

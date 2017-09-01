@@ -16,13 +16,18 @@ struct CurrentPlayingCard {
     let location: Location
 
     
-    func move(to position: CGPoint) {
+    func update(position: CGPoint) {
         playingCard.position = CGPoint(x: position.x - touchPoint.x, y: position.y - touchPoint.y)
     }
 
 
-    func returnToOriginalLocation() {
-        let action = SKAction.move(to: startPosition, duration: 0.2)
+    func move(to position: CGPoint) {
+        let action = SKAction.move(to: position, duration: 0.2)
         playingCard.run(action)
+    }
+
+
+    func returnToOriginalLocation() {
+        move(to: startPosition)
     }
 }
