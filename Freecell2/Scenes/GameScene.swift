@@ -9,34 +9,13 @@
 import SpriteKit
 import GameplayKit
 
-protocol GameSceneDelegate {
-    func newGame() -> Bool
-}
-
 class GameScene: SKScene {
 
     // MARK: - Properties
 
-    private let topLeft = CGPoint(x: 0, y: 1)
-    private let cardSize = CGSize(width: 103, height: 150)
-    private let spacing: CGFloat = 20
-    private let margin: CGFloat = -40
-    private var zIndex: CGFloat = 10
-    private let zIndexIncrement: CGFloat = 5
-
-    private let cellCount = 4
-    private let foundationCount = 4
-    private let cascadeCount = 8
-
     private let game = Game()
-    private var cells: [SKSpriteNode] = []
-    private var foundations: [SKSpriteNode] = []
-    private var cascades: [SKSpriteNode] = []
-    private var cardNodes: [PlayingCard] = []
-    private var newGameButton: SKSpriteNode!
-
+    private var gameGraphics = GameGraphics()
     private var currentPlayingCard: CurrentPlayingCard?
-
     var viewDelegate: GameSceneDelegate?
 
 
@@ -49,10 +28,12 @@ class GameScene: SKScene {
 
 
     override func didMove(to view: SKView) {
-        super.didMove(to: view)
         // https://stackoverflow.com/questions/39590602/scenedidload-being-called-twice
-        setupGameParts()
-        setupCards()
+        super.didMove(to: view)
+        print("didmove - setup game graphics")
+        gameGraphics.setup(width: size.width)
+        gameGraphics.setupCards(gameCascades: game.cascades)
+        gameGraphics.addChildren(to: self)
     }
 
 
@@ -73,102 +54,17 @@ class GameScene: SKScene {
     override func mouseUp(with event: NSEvent) {
         touchUp(atPoint: event.location(in: self))
     }
-    
-    
-    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
-    }
-
-
-    // MARK: - Private
-
-    private func cardFrom(position: CGPoint) -> PlayingCard? {
-        var candidateCards: [PlayingCard] = []
-        for card in cardNodes {
-            if card.contains(position) {
-                candidateCards.append(card)
-            }
-        }
-        candidateCards.sort(by: { $0.zPosition < $1.zPosition })
-        return candidateCards.last
-    }
-
-
-    private func dropLocation(from position: CGPoint) -> Location? {
-        for (i, cell) in cells.enumerated() {
-            if cell.contains(position) {
-                return .cell(i)
-            }
-        }
-        for (i, foundation) in foundations.enumerated() {
-            if foundation.contains(position) {
-                return .foundation(i)
-            }
-        }
-        for playingCard in cardNodes {
-            if playingCard.card == currentPlayingCard?.playingCard.card { continue }
-            if playingCard.contains(position) {
-                if let location = game.location(from: playingCard.card) {
-                    switch location {
-                    case .cascade(let value):
-                        let cascade = game.cascades[value]
-                        if cascade.isBottom(card: playingCard.card) {
-                            return location
-                        }
-                    default:
-                        break
-                    }
-                }
-            }
-        }
-        for (i, cascade) in cascades.enumerated() {
-            if cascade.contains(position) {
-                let gameCascade = game.cascades[i]
-                if gameCascade.isEmpty {
-                    return .cascade(i)
-                }
-            }
-        }
-        return nil
-    }
-
-
-    private func returnToOriginalLocation(currentPlayingCard: CurrentPlayingCard) {
-        let action = SKAction.move(to: currentPlayingCard.startPosition, duration: 0.5)
-        currentPlayingCard.playingCard.run(action)
-    }
-
-
-    private func moveToNewLocation(currentPlayingCard: CurrentPlayingCard, location: Location) {
-        let newPosition: CGPoint
-        switch location {
-        case .cell(let value):
-            let cell = cells[value]
-            newPosition = cell.position
-        case .foundation(let value):
-            let foundation = foundations[value]
-            newPosition = foundation.position
-        case .cascade(let value):
-            let cascade = cascades[value]
-            let gameCascade = game.cascades[value]
-            let cardCount = gameCascade.cards.count - 1
-            let cascadePosition = cascade.position
-            newPosition = CGPoint(x: cascadePosition.x, y: cascadePosition.y + CGFloat(cardCount) * margin)
-        }
-        let action = SKAction.move(to: newPosition, duration: 0.5)
-        currentPlayingCard.playingCard.run(action)
-    }
 
 
     // MARK: - Touch handlers
 
     private func touchDown(atPoint point: CGPoint) {
-        if newGameButton.contains(point) {
+        if gameGraphics.isNewGameTapped(point: point) {
             newGame()
             return
         }
         guard
-            let playingCard = cardFrom(position: point),
+            let playingCard = gameGraphics.cardFrom(position: point),
             let parent = playingCard.parent,
             let location = game.location(from: playingCard.card),
             game.canMove(card: playingCard.card)
@@ -176,16 +72,14 @@ class GameScene: SKScene {
             return
         }
         let touchPoint = playingCard.convert(point, from: parent)
-        playingCard.zPosition = zIndex
+        gameGraphics.setActive(card: playingCard)
         currentPlayingCard = CurrentPlayingCard(playingCard: playingCard, startPosition: playingCard.position, touchPoint: touchPoint, location: location)
-
-        zIndex += zIndexIncrement
     }
 
 
     private func doubleClick(at point: CGPoint) {
         guard
-            let playingCard = cardFrom(position: point),
+            let playingCard = gameGraphics.cardFrom(position: point),
             let location = game.location(from: playingCard.card),
             game.canMove(card: playingCard.card)
         else {
@@ -194,52 +88,36 @@ class GameScene: SKScene {
 
         let currentPlayingCard = CurrentPlayingCard(playingCard: playingCard, startPosition: point, touchPoint: point, location: location)
 
-        switch location {
-        case .foundation: break
-        case .cell:
-            do {
-                let newLocation = try game.moveToFoundation(from: location)
-                moveToNewLocation(currentPlayingCard: currentPlayingCard, location: newLocation)
-            } catch {}
-        case .cascade:
-            do {
-                let newFoundation = try game.moveToFoundation(from: location)
-                moveToNewLocation(currentPlayingCard: currentPlayingCard, location: newFoundation)
-                return
-            } catch {}
-            do {
-                let newCell = try game.moveToCell(from: location)
-                moveToNewLocation(currentPlayingCard: currentPlayingCard, location: newCell)
-                return
-            } catch {}
-        }
+        do {
+            let newLocation = try game.quickMove(from: location)
+            gameGraphics.move(currentPlayingCard: currentPlayingCard, to: newLocation, gameCascades: game.cascades)
+        } catch {}
     }
 
 
     private func touchMoved(toPoint pos: CGPoint) {
         guard let currentPlayingCard = currentPlayingCard else { return }
-        currentPlayingCard.playingCard.position = CGPoint(x: pos.x - currentPlayingCard.touchPoint.x, y: pos.y - currentPlayingCard.touchPoint.y)
+        currentPlayingCard.move(to: pos)
     }
 
 
     private func touchUp(atPoint pos: CGPoint) {
         guard let currentPlayingCard = currentPlayingCard else { return }
-        if let dropLocation = dropLocation(from: pos) {
+        if let dropLocation = gameGraphics.dropLocation(from: pos, currentPlayingCard: currentPlayingCard, game: game) {
             do {
                 let startLocation = currentPlayingCard.location
                 try game.move(from: startLocation, to: dropLocation)
-                moveToNewLocation(currentPlayingCard: currentPlayingCard, location: dropLocation)
+                gameGraphics.move(currentPlayingCard: currentPlayingCard, to: dropLocation, gameCascades: game.cascades)
             } catch GameError.invalidMove {
-                returnToOriginalLocation(currentPlayingCard: currentPlayingCard)
+                currentPlayingCard.returnToOriginalLocation()
             } catch {
                 // Something went wrong - don't know what
-                returnToOriginalLocation(currentPlayingCard: currentPlayingCard)
+                currentPlayingCard.returnToOriginalLocation()
             }
         } else {
-            returnToOriginalLocation(currentPlayingCard: currentPlayingCard)
+            currentPlayingCard.returnToOriginalLocation()
         }
         self.currentPlayingCard = nil
-
 
         // check if game is over
         if game.isGameOver {
@@ -250,76 +128,8 @@ class GameScene: SKScene {
 
     private func newGame() {
         guard let viewDelegate = viewDelegate, viewDelegate.newGame() else { return }
-
-        for card in cardNodes {
-            card.removeFromParent()
-        }
-        cardNodes = []
         game.new()
-        setupCards()
-    }
-
-    // MARK: - game setup
-
-    private func setupGameParts() {
-        let backgroundColour = NSColor.init(white: 1.0, alpha: 0.2)
-        let baseZPosition: CGFloat = zIndexIncrement
-
-        // Cells
-        for i in 0 ..< cellCount {
-            let cell = SKSpriteNode(color: backgroundColour, size: cardSize)
-            cell.anchorPoint = topLeft
-            cell.position = CGPoint(x: -margin + CGFloat(i) * (cardSize.width + spacing), y: margin)
-            cell.zPosition = baseZPosition
-            cells.append(cell)
-            addChild(cell)
-        }
-
-        // Foundations
-        for i in 0 ..< foundationCount {
-            let foundation = SKSpriteNode(color: backgroundColour, size: cardSize)
-            foundation.anchorPoint = topLeft
-            foundation.position = CGPoint(x: self.size.width + margin - cardSize.width - CGFloat(i) * (cardSize.width + spacing), y: margin)
-            foundation.zPosition = baseZPosition
-            foundations.append(foundation)
-            addChild(foundation)
-        }
-
-        let cascadeWidth = CGFloat(cascadeCount) * cardSize.width + CGFloat(cascadeCount - 1) * spacing
-        let cascadeMargin = (self.size.width - cascadeWidth) / 2
-
-        // Cascades
-        for i in 0 ..< cascadeCount {
-            let cascade = SKSpriteNode(color: backgroundColour, size: cardSize)
-            cascade.anchorPoint = topLeft
-            cascade.position = CGPoint(x: cascadeMargin + CGFloat(i) * (cardSize.width + spacing), y: 2 * margin - cardSize.height)
-            cascade.zPosition = baseZPosition
-            cascades.append(cascade)
-            addChild(cascade)
-        }
-
-        // New game button
-        newGameButton = SKSpriteNode(color: .red, size: CGSize(width: 50, height: 50))
-        newGameButton.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        newGameButton.position = CGPoint(x: self.size.width / 2, y: -110)
-        newGameButton.zPosition = baseZPosition
-        addChild(newGameButton)
-    }
-
-
-    private func setupCards() {
-        for (cascadeCards, cascade) in zip(game.cascades, cascades) {
-            let cascadePosition = cascade.position
-            for (i, gameCard) in cascadeCards.cards.enumerated() {
-                let card = PlayingCard(card: gameCard, size: cardSize)
-                card.anchorPoint = topLeft
-                card.size = cardSize
-                card.position = CGPoint(x: cascadePosition.x, y: cascadePosition.y + margin * CGFloat(i))
-                card.zPosition = zIndex
-                zIndex += zIndexIncrement
-                cardNodes.append(card)
-                addChild(card)
-            }
-        }
+        gameGraphics.newGame(gameCascades: game.cascades)
+        gameGraphics.addCards(to: self)
     }
 }
