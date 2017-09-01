@@ -24,6 +24,13 @@ final class PlayingCard: SKSpriteNode {
 }
 
 
+extension PlayingCard {
+    static func ==(lhs: PlayingCard, rhs: PlayingCard) -> Bool {
+        return lhs.card == rhs.card
+    }
+}
+
+
 extension Card {
     var fileName: String {
         return "\(value.fileName)_of_\(suit.fileName).png"
