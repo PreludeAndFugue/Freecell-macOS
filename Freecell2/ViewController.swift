@@ -12,11 +12,19 @@ import GameplayKit
 
 class ViewController: NSViewController {
 
+    var statistics: Statistics!
+
     @IBOutlet var skView: SKView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureScene()
+        configureStatistics()
+    }
 
+    // MARK: - Private
+
+    private func configureScene() {
         if let view = self.skView {
             // Load the SKScene from 'GameScene.sks'
             if let scene = SKScene(fileNamed: "GameScene") as? GameScene {
@@ -28,15 +36,22 @@ class ViewController: NSViewController {
                 // Present the scene
                 view.presentScene(scene)
             }
-            
             view.ignoresSiblingOrder = true
-            
             view.showsFPS = true
             view.showsNodeCount = true
         }
     }
+
+
+    private func configureStatistics() {
+        let userDefaults = UserDefaults.standard
+        let statisticsStore = StatisticsStore(userDefaults: userDefaults)
+        statistics = statisticsStore.load()
+    }
 }
 
+
+// MARK: - GameSceneDelegate
 
 extension ViewController: GameSceneDelegate {
     func newGame() -> Bool {
@@ -49,6 +64,11 @@ extension ViewController: GameSceneDelegate {
         default:
             return false
         }
+    }
+
+
+    func gameDone() {
+        
     }
 
 
