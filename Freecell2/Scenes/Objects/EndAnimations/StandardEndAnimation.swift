@@ -10,6 +10,7 @@ import SpriteKit
 
 struct StandardEndAnimation: EndAnimationProtocol {
 
+    // cards only collide with ground
     let groundBitMask: UInt32 = 0b0001
     let cardBitMask: UInt32 = 0b0010
 
@@ -18,7 +19,7 @@ struct StandardEndAnimation: EndAnimationProtocol {
         var t = 0.0
         let dt = 0.2
         addEdge(to: scene)
-        for card in cards.shuffled() {
+        for card in sortKingsTop(cards: cards) {
             let delayAction = SKAction.wait(forDuration: t)
             let blockAction = SKAction.run({ self.addPhysicsBody(to: card) })
             card.run(SKAction.sequence([delayAction, blockAction]))
@@ -54,5 +55,10 @@ struct StandardEndAnimation: EndAnimationProtocol {
         scene.physicsBody = SKPhysicsBody(edgeFrom: start, to: end)
         scene.physicsBody?.categoryBitMask = groundBitMask
         scene.physicsBody?.friction = 0
+    }
+
+
+    private func sortKingsTop(cards: [PlayingCard]) -> [PlayingCard] {
+        return cards.sorted(by: { $0.card.value.rawValue > $1.card.value.rawValue })
     }
 }
