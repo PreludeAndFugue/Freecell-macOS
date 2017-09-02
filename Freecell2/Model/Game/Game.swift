@@ -71,7 +71,6 @@ class Game {
         try move(card: card, to: toLocation)
 
         moves.add(move: Move(fromLocation: fromLocation, toLocation: toLocation))
-        print(moves)
 
         switch fromLocation {
         case .cascade(let value):

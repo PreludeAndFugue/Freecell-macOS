@@ -15,9 +15,9 @@ struct GameGraphics {
     private var cells: [SKSpriteNode] = []
     private var foundations: [SKSpriteNode] = []
     private var cascades: [SKSpriteNode] = []
-    private var cards: [PlayingCard] = []
     private var newGameButton: SKSpriteNode = SKSpriteNode(color: .red, size: CGSize(width: 50, height: 50))
 
+    var cards: [PlayingCard] = []
 
     mutating func setup(width: CGFloat) {
         let baseZPosition: CGFloat = config.zIndexIncrement

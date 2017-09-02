@@ -15,6 +15,8 @@ class GameScene: SKScene {
 
     private let game = Game()
     private var gameGraphics = GameGraphics()
+    private let endAnimation: EndAnimationProtocol = StandardEndAnimation()
+    private let easterEgg = EasterEgg()
     private var currentPlayingCard: CurrentPlayingCard?
     var viewDelegate: GameSceneDelegate?
 
@@ -31,9 +33,11 @@ class GameScene: SKScene {
         // https://stackoverflow.com/questions/39590602/scenedidload-being-called-twice
         super.didMove(to: view)
         print("didmove - setup game graphics")
+        self.size = view.bounds.size
         gameGraphics.setup(width: size.width)
         gameGraphics.setupCards(gameCascades: game.cascades)
         gameGraphics.addChildren(to: self)
+        easterEgg.addChildren(to: self)
     }
 
 
@@ -59,6 +63,10 @@ class GameScene: SKScene {
     // MARK: - Touch handlers
 
     private func touchDown(atPoint point: CGPoint) {
+        if easterEgg.isEasterEgg(point: point) {
+            print("easter egg tapped")
+            endAnimation.run(with: gameGraphics.cards, and: self)
+        }
         if gameGraphics.isNewGameTapped(point: point) {
             newGame()
             return
@@ -92,6 +100,12 @@ class GameScene: SKScene {
             let newLocation = try game.quickMove(from: location)
             gameGraphics.move(currentPlayingCard: currentPlayingCard, to: newLocation, gameCascades: game.cascades)
         } catch {}
+
+        // check if game is over
+        if game.isGameOver {
+            print("game over")
+            endAnimation.run(with: gameGraphics.cards, and: self)
+        }
     }
 
 
@@ -122,6 +136,7 @@ class GameScene: SKScene {
         // check if game is over
         if game.isGameOver {
             print("game over")
+            endAnimation.run(with: gameGraphics.cards, and: self)
         }
     }
 
