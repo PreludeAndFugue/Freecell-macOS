@@ -12,6 +12,7 @@ import GameplayKit
 
 class ViewController: NSViewController {
 
+    var statisticsStore: StatisticsStore!
     var statistics: Statistics!
 
     @IBOutlet var skView: SKView!
@@ -43,7 +44,7 @@ class ViewController: NSViewController {
 
     private func configureStatistics() {
         let userDefaults = UserDefaults.standard
-        let statisticsStore = StatisticsStore(userDefaults: userDefaults)
+        statisticsStore = StatisticsStore(userDefaults: userDefaults)
         statistics = statisticsStore.load()
     }
 }
@@ -52,10 +53,12 @@ class ViewController: NSViewController {
 // MARK: - GameSceneDelegate
 
 extension ViewController: GameSceneDelegate {
-    func newGame() -> Bool {
+    func newGame(currentGameState: Game.State) -> Bool {
         let alert = createAlert()
         switch alert.runModal() {
         case .alertFirstButtonReturn:
+            statistics.update(with: currentGameState)
+            statisticsStore.save(statistics: statistics)
             return true
         case .alertSecondButtonReturn:
             return false
@@ -66,7 +69,8 @@ extension ViewController: GameSceneDelegate {
 
 
     func gameDone() {
-        
+        statistics.update(with: .done)
+        statisticsStore.save(statistics: statistics)
     }
 
 
