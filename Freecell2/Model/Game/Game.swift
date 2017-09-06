@@ -8,6 +8,11 @@
 
 class Game {
 
+    enum State {
+        case playing
+        case done
+    }
+
     // MARK: - Properties
 
     private let cells: [Cell]
@@ -25,6 +30,11 @@ class Game {
     }
 
 
+    var state: State {
+        return isGameOver ? .done : .playing
+    }
+
+    
     // MARK: - Initialisers
 
     init() {

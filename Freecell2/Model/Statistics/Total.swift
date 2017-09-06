@@ -10,3 +10,10 @@ struct Total: Codable {
     var won: Int
     var lost: Int
 }
+
+
+extension Total: CustomDebugStringConvertible {
+    var debugDescription: String {
+        return "won: \(won), lost: \(lost)"
+    }
+}

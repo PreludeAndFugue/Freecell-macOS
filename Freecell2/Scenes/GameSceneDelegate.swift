@@ -7,6 +7,6 @@
 //
 
 protocol GameSceneDelegate {
-    func newGame() -> Bool
+    func newGame(currentGameState: Game.State) -> Bool
     func gameDone()
 }

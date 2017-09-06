@@ -9,6 +9,7 @@
 import SpriteKit
 
 struct EasterEgg {
+    
     private let button = SKSpriteNode(color: .clear, size: CGSize(width: 30, height: 30))
 
 

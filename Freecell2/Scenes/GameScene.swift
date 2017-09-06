@@ -32,7 +32,6 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         // https://stackoverflow.com/questions/39590602/scenedidload-being-called-twice
         super.didMove(to: view)
-        print("didmove - setup game graphics")
         self.size = view.bounds.size
         gameGraphics.setup(width: size.width)
         gameGraphics.setupCards(gameCascades: game.cascades)
@@ -101,10 +100,8 @@ class GameScene: SKScene {
             gameGraphics.move(currentPlayingCard: currentPlayingCard, to: newLocation, gameCascades: game.cascades)
         } catch {}
 
-        // check if game is over
         if game.isGameOver {
-            print("game over")
-            endAnimation.run(with: gameGraphics.cards, and: self)
+            gameIsWon()
         }
     }
 
@@ -133,18 +130,22 @@ class GameScene: SKScene {
         }
         self.currentPlayingCard = nil
 
-        // check if game is over
         if game.isGameOver {
-            print("game over")
-            endAnimation.run(with: gameGraphics.cards, and: self)
+            gameIsWon()
         }
     }
 
 
     private func newGame() {
-        guard let viewDelegate = viewDelegate, viewDelegate.newGame() else { return }
+        guard let viewDelegate = viewDelegate, viewDelegate.newGame(currentGameState: game.state) else { return }
         game.new()
         gameGraphics.newGame(gameCascades: game.cascades)
         gameGraphics.addCards(to: self)
+    }
+
+
+    private func gameIsWon() {
+        endAnimation.run(with: gameGraphics.cards, and: self)
+        viewDelegate?.gameDone()
     }
 }
