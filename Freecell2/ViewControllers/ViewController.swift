@@ -43,6 +43,11 @@ class ViewController: NSViewController {
 
     @IBAction func newGame(_ sender: NSMenuItem) {
         print("new game")
+        if newGame() {
+            print("yes")
+        } else {
+            print("no")
+        }
     }
 
 
@@ -68,6 +73,24 @@ class ViewController: NSViewController {
         statisticsStore = StatisticsStore(userDefaults: userDefaults)
         statistics = statisticsStore.load()
     }
+
+
+    private func newGame() -> Bool {
+        let alert = NSAlert()
+        alert.alertStyle = .informational
+        alert.messageText = "New Game?"
+        alert.informativeText = "Do you want to start a new game?"
+        alert.addButton(withTitle: "Yes")
+        alert.addButton(withTitle: "No")
+        switch alert.runModal() {
+        case .alertFirstButtonReturn:
+            return true
+        case .alertSecondButtonReturn:
+            return false
+        default:
+            return false
+        }
+    }
 }
 
 
@@ -75,14 +98,10 @@ class ViewController: NSViewController {
 
 extension ViewController: GameSceneDelegate {
     func newGame(currentGameState: Game.State) -> Bool {
-        let alert = createAlert()
-        switch alert.runModal() {
-        case .alertFirstButtonReturn:
+        if newGame() {
             if currentGameState == .playing { updateStatistics(with: .playing) }
             return true
-        case .alertSecondButtonReturn:
-            return false
-        default:
+        } else {
             return false
         }
     }
@@ -96,16 +115,5 @@ extension ViewController: GameSceneDelegate {
     private func updateStatistics(with gameState: Game.State) {
         statistics.update(with: gameState)
         statisticsStore.save(statistics: statistics)
-    }
-
-
-    private func createAlert() -> NSAlert {
-        let alert = NSAlert()
-        alert.alertStyle = .informational
-        alert.messageText = "New Game?"
-        alert.informativeText = "Do you want to start a new game?"
-        alert.addButton(withTitle: "Yes")
-        alert.addButton(withTitle: "No")
-        return alert
     }
 }
