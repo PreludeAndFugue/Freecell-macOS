@@ -57,7 +57,7 @@
                                     <items>
                                         <menuItem title="New Game" keyEquivalent="n" id="Was-JA-tGl">
                                             <connections>
-                                                <action selector="newDocument:" target="Ady-hI-5gd" id="4Si-XN-c54"/>
+                                                <action selector="newGame:" target="Ady-hI-5gd" id="D8X-qa-zTz"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -69,6 +69,9 @@
                                     <items>
                                         <menuItem title="Statistics" id="WYV-ek-JLc" userLabel="Statistics">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="showStatistics:" target="Ady-hI-5gd" id="6cb-uL-QYc"/>
+                                            </connections>
                                         </menuItem>
                                     </items>
                                 </menu>
@@ -105,7 +108,7 @@
         <scene sceneID="R2V-B0-nI4">
             <objects>
                 <windowController id="B8D-0N-5wS" sceneMemberID="viewController">
-                    <window key="window" title="Freecell" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="IQv-IB-iLA">
+                    <window key="window" title="Freecell" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" tabbingMode="disallowed" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <rect key="contentRect" x="196" y="240" width="1200" height="1100"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
@@ -120,6 +123,40 @@
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="75" y="250"/>
+        </scene>
+        <!--Window Controller-->
+        <scene sceneID="86b-as-dXA">
+            <objects>
+                <windowController storyboardIdentifier="StatisticsWindowController" id="COy-h3-BFB" sceneMemberID="viewController">
+                    <window key="window" title="Statistics" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" tabbingMode="disallowed" id="tph-5O-wZn">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="294" y="314" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
+                        <connections>
+                            <outlet property="delegate" destination="COy-h3-BFB" id="Ogd-1d-ZiY"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="aYu-Cu-cof" kind="relationship" relationship="window.shadowedContentViewController" id="6up-Co-Gm5"/>
+                    </connections>
+                </windowController>
+                <customObject id="MgU-A6-Pex" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1231" y="990"/>
+        </scene>
+        <!--Statistics View Controller-->
+        <scene sceneID="92q-Uv-MZW">
+            <objects>
+                <viewController id="aYu-Cu-cof" customClass="StatisticsViewController" customModule="Freecell2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="u6A-BW-Feh">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </view>
+                </viewController>
+                <customObject id="It5-ie-alm" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1938" y="965"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="hIz-AP-VOD">

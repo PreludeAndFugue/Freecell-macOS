@@ -23,16 +23,37 @@ class ViewController: NSViewController {
         configureStatistics()
     }
 
+    
+    // MARK: - Actions
+
+    @IBAction func showStatistics(_ sender: NSMenuItem) {
+        let mainStoryboard = NSStoryboard.Name("Main")
+        let statisticsWindow = NSStoryboard.SceneIdentifier("StatisticsWindowController")
+        let storyboard = NSStoryboard(name: mainStoryboard, bundle: nil)
+        guard
+            let statisticsWindowController = storyboard.instantiateController(withIdentifier: statisticsWindow) as? NSWindowController,
+            let window = statisticsWindowController.window
+        else {
+            return
+        }
+        let application = NSApplication.shared
+        application.runModal(for: window)
+    }
+
+
+    @IBAction func newGame(_ sender: NSMenuItem) {
+        print("new game")
+    }
+
+
     // MARK: - Private
 
     private func configureScene() {
         if let view = self.skView {
-            // Load the SKScene from 'GameScene.sks'
             if let scene = SKScene(fileNamed: "GameScene") as? GameScene {
                 // Set the scale mode to scale to fit the window
                 scene.scaleMode = .aspectFit
                 scene.viewDelegate = self
-                // Present the scene
                 view.presentScene(scene)
             }
             view.ignoresSiblingOrder = true
