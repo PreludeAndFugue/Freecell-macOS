@@ -25,6 +25,8 @@ struct Streaks: Codable {
             state = .winning
         case (.losing, .playing):
             current += 1
+        case (.winning, .notStarted), (.losing, .notStarted):
+            break
         }
         updateTotal(streakState: oldState, gameState: gameState)
     }
@@ -40,6 +42,8 @@ struct Streaks: Codable {
             if current > total.lost {
                 total.lost = current
             }
+        case (.winning, .notStarted), (.losing, .notStarted):
+            break
         }
     }
 

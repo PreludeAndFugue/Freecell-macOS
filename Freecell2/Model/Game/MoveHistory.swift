@@ -9,6 +9,11 @@
 struct MoveHistory {
     var moves: [Move] = []
 
+    var noMovesMade: Bool {
+        return moves.count == 0
+    }
+
+    
     mutating func add(move: Move) {
         moves.append(move)
     }

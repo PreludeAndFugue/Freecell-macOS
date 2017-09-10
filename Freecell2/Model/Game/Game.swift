@@ -9,6 +9,7 @@
 class Game {
 
     enum State {
+        case notStarted
         case playing
         case done
     }
@@ -31,6 +32,9 @@ class Game {
 
 
     var state: State {
+        if moves.noMovesMade {
+            return .notStarted
+        }
         return isGameOver ? .done : .playing
     }
 

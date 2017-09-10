@@ -18,6 +18,8 @@ struct Statistics: Codable {
 
     mutating func update(with gameState: Game.State) {
         switch gameState {
+        case .notStarted:
+            return
         case .done:
             total.won += 1
         case .playing:

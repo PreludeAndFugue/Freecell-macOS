@@ -57,8 +57,7 @@ extension ViewController: GameSceneDelegate {
         let alert = createAlert()
         switch alert.runModal() {
         case .alertFirstButtonReturn:
-            statistics.update(with: currentGameState)
-            statisticsStore.save(statistics: statistics)
+            if currentGameState == .playing { updateStatistics(with: .playing) }
             return true
         case .alertSecondButtonReturn:
             return false
@@ -69,7 +68,12 @@ extension ViewController: GameSceneDelegate {
 
 
     func gameDone() {
-        statistics.update(with: .done)
+        updateStatistics(with: .done)
+    }
+
+
+    private func updateStatistics(with gameState: Game.State) {
+        statistics.update(with: gameState)
         statisticsStore.save(statistics: statistics)
     }
 
