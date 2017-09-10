@@ -18,8 +18,11 @@ class GameScene: SKScene {
     private let endAnimation: EndAnimationProtocol = StandardEndAnimation()
     private let easterEgg = EasterEgg()
     private var currentPlayingCard: CurrentPlayingCard?
-    var viewDelegate: GameSceneDelegate?
+    weak var viewDelegate: GameSceneDelegate?
 
+    var gameState: Game.State {
+        return game.state
+    }
 
     // MARK: - Lifecycle
 

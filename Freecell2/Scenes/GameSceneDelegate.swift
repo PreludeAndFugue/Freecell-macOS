@@ -6,7 +6,7 @@
 //  Copyright © 2017 Gary Kerr. All rights reserved.
 //
 
-protocol GameSceneDelegate {
+protocol GameSceneDelegate: class {
     func newGame(currentGameState: Game.State) -> Bool
     func gameDone()
 }
