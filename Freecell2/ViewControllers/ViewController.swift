@@ -44,7 +44,6 @@ class ViewController: NSViewController {
 
     @IBAction func newGame(_ sender: NSMenuItem) {
         if newGame() {
-            print("yes")
             guard let delegate = delegate else { return }
             if delegate.gameState == .playing { updateStatistics(with: .playing) }
             delegate.newGame()

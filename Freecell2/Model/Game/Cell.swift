@@ -33,11 +33,6 @@ final class Cell: CanAddCard, ContainsCard, HasState, Resetable {
     func removeCard() {
         state = .empty
     }
-
-
-    func unused() {
-        
-    }
 }
 
 

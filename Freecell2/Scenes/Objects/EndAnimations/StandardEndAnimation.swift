@@ -28,6 +28,8 @@ struct StandardEndAnimation: EndAnimationProtocol {
     }
 
 
+    // MARK: - Private
+
     private func addPhysicsBody(to card: PlayingCard) {
         let physics = SKPhysicsBody(rectangleOf: card.size)
         physics.affectedByGravity = true

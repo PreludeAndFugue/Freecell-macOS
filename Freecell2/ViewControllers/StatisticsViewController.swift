@@ -12,7 +12,5 @@ class StatisticsViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("hello stats controller")
     }
-    
 }
