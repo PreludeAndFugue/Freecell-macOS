@@ -14,6 +14,7 @@ class ViewController: NSViewController {
 
     var statisticsStore: StatisticsStore!
     var statistics: Statistics!
+    weak var delegate: ViewControllerDelegate?
 
     @IBOutlet var skView: SKView!
     
@@ -42,11 +43,11 @@ class ViewController: NSViewController {
 
 
     @IBAction func newGame(_ sender: NSMenuItem) {
-        print("new game")
         if newGame() {
             print("yes")
-        } else {
-            print("no")
+            guard let delegate = delegate else { return }
+            if delegate.gameState == .playing { updateStatistics(with: .playing) }
+            delegate.newGame()
         }
     }
 
@@ -60,6 +61,7 @@ class ViewController: NSViewController {
                 scene.scaleMode = .aspectFit
                 scene.viewDelegate = self
                 view.presentScene(scene)
+                delegate = scene
             }
             view.ignoresSiblingOrder = true
             view.showsFPS = true
@@ -83,12 +85,8 @@ class ViewController: NSViewController {
         alert.addButton(withTitle: "Yes")
         alert.addButton(withTitle: "No")
         switch alert.runModal() {
-        case .alertFirstButtonReturn:
-            return true
-        case .alertSecondButtonReturn:
-            return false
-        default:
-            return false
+        case .alertFirstButtonReturn: return true
+        default: return false
         }
     }
 }

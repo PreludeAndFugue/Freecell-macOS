@@ -9,7 +9,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, ViewControllerDelegate {
 
     // MARK: - Properties
 
@@ -62,6 +62,13 @@ class GameScene: SKScene {
     }
 
 
+    func newGame() {
+        game.new()
+        gameGraphics.newGame(gameCascades: game.cascades)
+        gameGraphics.addCards(to: self)
+    }
+
+
     // MARK: - Touch handlers
 
     private func touchDown(atPoint point: CGPoint) {
@@ -70,7 +77,7 @@ class GameScene: SKScene {
             endAnimation.run(with: gameGraphics.cards, and: self)
         }
         if gameGraphics.isNewGameTapped(point: point) {
-            newGame()
+            requestNewGame()
             return
         }
         guard
@@ -139,11 +146,9 @@ class GameScene: SKScene {
     }
 
 
-    private func newGame() {
+    private func requestNewGame() {
         guard let viewDelegate = viewDelegate, viewDelegate.newGame(currentGameState: game.state) else { return }
-        game.new()
-        gameGraphics.newGame(gameCascades: game.cascades)
-        gameGraphics.addCards(to: self)
+        newGame()
     }
 
 

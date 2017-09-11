@@ -96,6 +96,7 @@
 		4E7B17841F5AFAB100D771FC /* GameResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7B17831F5AFAB100D771FC /* GameResult.swift */; };
 		4E984C0E1F58D48E00FD8BD7 /* GameSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E984C0D1F58D48E00FD8BD7 /* GameSceneDelegate.swift */; };
 		4EA1E2921F66005C0061E64D /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA1E2911F66005C0061E64D /* StatisticsViewController.swift */; };
+		4EA1E2951F6609DB0061E64D /* ViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA1E2941F6609DB0061E64D /* ViewControllerDelegate.swift */; };
 		4EE685EA1F578EB80005984F /* GameGraphics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE685E91F578EB80005984F /* GameGraphics.swift */; };
 		4EE685EC1F578F210005984F /* GameGraphicsConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE685EB1F578F210005984F /* GameGraphicsConfig.swift */; };
 		4EF3F2911F4857F8004197A8 /* CanAddCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF3F2901F4857F8004197A8 /* CanAddCard.swift */; };
@@ -210,6 +211,7 @@
 		4E7B17831F5AFAB100D771FC /* GameResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameResult.swift; sourceTree = "<group>"; };
 		4E984C0D1F58D48E00FD8BD7 /* GameSceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSceneDelegate.swift; sourceTree = "<group>"; };
 		4EA1E2911F66005C0061E64D /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
+		4EA1E2941F6609DB0061E64D /* ViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerDelegate.swift; sourceTree = "<group>"; };
 		4EE685E91F578EB80005984F /* GameGraphics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameGraphics.swift; sourceTree = "<group>"; };
 		4EE685EB1F578F210005984F /* GameGraphicsConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameGraphicsConfig.swift; sourceTree = "<group>"; };
 		4EF3F2901F4857F8004197A8 /* CanAddCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanAddCard.swift; sourceTree = "<group>"; };
@@ -466,6 +468,7 @@
 			children = (
 				4EA1E2911F66005C0061E64D /* StatisticsViewController.swift */,
 				4E396E881EF3DF8600F8696A /* ViewController.swift */,
+				4EA1E2941F6609DB0061E64D /* ViewControllerDelegate.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -651,6 +654,7 @@
 				4EF3F29B1F489690004197A8 /* State.swift in Sources */,
 				4E2E3F0F1F5628B600BF0862 /* HasState.swift in Sources */,
 				4E2E3F0B1F5627A000BF0862 /* ContainsCard.swift in Sources */,
+				4EA1E2951F6609DB0061E64D /* ViewControllerDelegate.swift in Sources */,
 				4E71F1EB1F4389B7002E66D3 /* Cascade.swift in Sources */,
 				4EE685EC1F578F210005984F /* GameGraphicsConfig.swift in Sources */,
 				4E71F1E11F438880002E66D3 /* Value.swift in Sources */,
