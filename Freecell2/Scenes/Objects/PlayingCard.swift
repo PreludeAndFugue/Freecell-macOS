@@ -16,6 +16,7 @@ final class PlayingCard: SKSpriteNode {
         let texture = SKTexture(imageNamed: card.fileName)
         self.card = card
         super.init(texture: texture, color: .clear, size: size)
+        self.name = card.name
     }
     
     required init?(coder aDecoder: NSCoder) {

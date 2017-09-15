@@ -10,6 +10,10 @@ struct Card {
     let suit: Suit
     let value: Value
 
+    var name: String {
+        return "\(suit.name)-\(value.name)"
+    }
+
     static func deck() -> [Card] {
         var cards: [Card] = []
         for suit in Suit.values {

@@ -185,4 +185,46 @@ struct GameGraphics {
         }
         return nil
     }
+
+
+    func undo(move: Move, card: Card, gameCascades: [Cascade]) {
+        print("game graphics, undo", move)
+        let position = positionFrom(location: move.toLocation)
+        print(position)
+        let playingCard = findPlayingCard(from: card)
+        let currentPlayingCard = CurrentPlayingCard(playingCard: playingCard, startPosition: playingCard.position, touchPoint: playingCard.position, location: move.toLocation)
+        self.move(currentPlayingCard: currentPlayingCard, to: move.fromLocation, gameCascades: gameCascades)
+    }
+
+
+    // MARK: - Private
+
+    private func positionFrom(location: Location) -> CGPoint {
+        let position: CGPoint
+        switch location {
+        case .cascade(let value):
+            let cascade = cascades[value]
+            print("cascade position")
+            position = cascade.position
+        case .cell(let value):
+            let cell = cells[value]
+            print("cell position")
+            position = cell.position
+        case .foundation(let value):
+            let foundation = foundations[value]
+            print("foundation position")
+            position = foundation.position
+        }
+        return CGPoint(x: position.x + config.cardSize.width/2, y: position.y - config.cardSize.height/2)
+    }
+
+
+    private func findPlayingCard(from card: Card) -> PlayingCard {
+        for playingCard in cards {
+            if playingCard.card == card {
+                return playingCard
+            }
+        }
+        fatalError("Couldn't find PlayingCard from Card")
+    }
 }

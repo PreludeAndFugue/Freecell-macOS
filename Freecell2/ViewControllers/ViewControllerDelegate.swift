@@ -9,4 +9,5 @@
 protocol ViewControllerDelegate: class {
     var gameState: Game.State { get }
     func newGame()
+    func undo()
 }

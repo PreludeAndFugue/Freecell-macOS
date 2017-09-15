@@ -9,7 +9,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene, ViewControllerDelegate {
+class GameScene: SKScene {
 
     // MARK: - Properties
 
@@ -19,10 +19,6 @@ class GameScene: SKScene, ViewControllerDelegate {
     private let easterEgg = EasterEgg()
     private var currentPlayingCard: CurrentPlayingCard?
     weak var viewDelegate: GameSceneDelegate?
-
-    var gameState: Game.State {
-        return game.state
-    }
 
     // MARK: - Lifecycle
 
@@ -59,13 +55,6 @@ class GameScene: SKScene, ViewControllerDelegate {
 
     override func mouseUp(with event: NSEvent) {
         touchUp(atPoint: event.location(in: self))
-    }
-
-
-    func newGame() {
-        game.new()
-        gameGraphics.newGame(gameCascades: game.cascades)
-        gameGraphics.addCards(to: self)
     }
 
 
@@ -155,5 +144,31 @@ class GameScene: SKScene, ViewControllerDelegate {
     private func gameIsWon() {
         endAnimation.run(with: gameGraphics.cards, and: self)
         viewDelegate?.gameDone()
+    }
+}
+
+
+// MARK: - ViewControllerDegelate
+
+extension GameScene: ViewControllerDelegate {
+    var gameState: Game.State {
+        return game.state
+    }
+
+
+    func newGame() {
+        game.new()
+        gameGraphics.newGame(gameCascades: game.cascades)
+        gameGraphics.addCards(to: self)
+    }
+
+
+    func undo() {
+        guard let move = game.lastMove else { return }
+        // game undo should return Card
+        guard let card = game.undo(move: move) else { return }
+        // pass card name to graphics so it can easily find node from name
+        // construct CurrentPlayingCard to pass into this method
+        gameGraphics.undo(move: move, card: card, gameCascades: game.cascades)
     }
 }

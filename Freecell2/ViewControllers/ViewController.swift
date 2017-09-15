@@ -51,6 +51,11 @@ class ViewController: NSViewController {
     }
 
 
+    @IBAction func undo(_ sender: NSMenuItem) {
+        delegate?.undo()
+    }
+
+
     // MARK: - Private
 
     private func configureScene() {

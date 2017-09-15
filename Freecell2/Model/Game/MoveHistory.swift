@@ -7,7 +7,12 @@
 //
 
 struct MoveHistory {
-    var moves: [Move] = []
+    private var moves: [Move] = []
+
+
+    var lastMove: Move? {
+        return moves.last
+    }
 
     var noMovesMade: Bool {
         return moves.count == 0
@@ -16,6 +21,11 @@ struct MoveHistory {
     
     mutating func add(move: Move) {
         moves.append(move)
+    }
+
+
+    mutating func undo() {
+        let _ = moves.popLast()
     }
 
 

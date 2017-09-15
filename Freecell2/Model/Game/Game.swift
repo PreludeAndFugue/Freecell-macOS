@@ -38,6 +38,11 @@ class Game {
         return isGameOver ? .done : .playing
     }
 
+
+    var lastMove: Move? {
+        return moves.lastMove
+    }
+
     
     // MARK: - Initialisers
 
@@ -181,6 +186,15 @@ class Game {
             }
         }
         return nil
+    }
+
+
+    func undo(move: Move) -> Card? {
+        print("game", undo)
+        guard let card = card(at: move.toLocation) else { return nil }
+
+//        moves.undo()
+        return card
     }
 
 

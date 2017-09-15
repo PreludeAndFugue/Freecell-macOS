@@ -24,6 +24,19 @@ enum Suit {
             return .red
         }
     }
+
+    var name: String {
+        switch self {
+        case .clubs:
+            return "C"
+        case .diamonds:
+            return "D"
+        case .hearts:
+            return "H"
+        case .spades:
+            return "S"
+        }
+    }
 }
 
 

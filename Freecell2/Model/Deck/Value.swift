@@ -21,8 +21,14 @@ enum Value: Int {
     case queen
     case king
 
+    
     static var values: [Value] {
         return [.ace, .two, .three, .four, .five, .six, .seven, .eight, .nine, .ten, .jack, .queen, .king]
+    }
+
+
+    var name: String {
+        return String(describing: self.rawValue)
     }
 }
 
